@@ -1,0 +1,18 @@
+#server:
+#  port: 8080
+#spring:
+
+#  datasource:
+#    url: jdbc:mysql://localhost:3306/gdpr_dev
+#    username: root
+#    password:
+    #    username: gdpr_admin
+    #    password: gdpr2023
+#  jpa:
+#    databasePlatform: org.hibernate.dialect.MySQL8Dialect
+#    showSql: true
+#    hibernate:
+#      ddlAuto: update
+spring:
+  jpa:
+    generateDdl: true
