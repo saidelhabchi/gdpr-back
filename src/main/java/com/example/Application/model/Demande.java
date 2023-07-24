@@ -9,7 +9,7 @@ public class Demande {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     int id;
-    @Column( name = "titre_demande")
+    @Column( name = "titre_demande", unique = true, nullable = false)
     String title;
     @ManyToOne
     @JoinColumn(name = "occupant_id")
