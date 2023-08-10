@@ -2,6 +2,17 @@ server:
   port: 8800
 
 spring:
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: pfa.production2023@gmail.com
+    password: zaastubhxckgjppr
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
   servlet:
     multipart:
       maxFileSize: 5000000
@@ -24,3 +35,5 @@ spring:
 gdpr:
   env:
     uploadFolder: D:\said\Stage\Next_try\gdpr\public\upload-folder\fiches\
+    admin:
+      mail: saidelhabchi31@gmail.com

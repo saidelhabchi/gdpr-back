@@ -1,9 +1,6 @@
 package com.example.Application.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,11 +15,17 @@ public class Admin implements UserDetails {
     int id;
     String firstName;
     String lastName;
+    @Column(unique = true)
     String username;
     String password;
+    @Column(unique = true)
     String email;
+    @Column(unique = true)
     String phone;
     Authority authorities = new Authority();
+    @Column(name = "verification_code")
+    String verificationCode;
+    boolean enabled;
 
     public int getId() {
         return id;
@@ -64,7 +67,7 @@ public class Admin implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return enabled;
     }
 
     public String getFirstName() {
@@ -108,5 +111,8 @@ public class Admin implements UserDetails {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 }

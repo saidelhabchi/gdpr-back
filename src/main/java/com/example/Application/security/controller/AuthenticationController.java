@@ -1,17 +1,12 @@
 package com.example.Application.security.controller;
 
 import com.example.Application.model.Admin;
-import com.example.Application.security.dto.AdminRegisterDTO;
-import com.example.Application.security.dto.LoginRequestDTO;
-import com.example.Application.security.dto.LoginResponseDTO;
+import com.example.Application.security.dto.*;
 import com.example.Application.security.service.AuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -28,5 +23,19 @@ public class AuthenticationController {
     public ResponseEntity<LoginResponseDTO> login(@RequestBody LoginRequestDTO requestDTO){
         LoginResponseDTO res = authenticationService.login(requestDTO);
         return new ResponseEntity<>(res,HttpStatus.OK);
+    }
+    @GetMapping("/verify/{code}")
+    public String verifyPage(){
+        return "need to be implemented";
+    }
+    @PostMapping("/verify/{code}")
+    public ResponseEntity<String> verify(@PathVariable("code") String code, @RequestBody AccountVerificationDTO verificationDTO){
+        String response = authenticationService.accountVerification(verificationDTO, code);
+        return new ResponseEntity<>(response,HttpStatus.OK);
+    }
+
+    @PostMapping("/change_password")
+    public ResponseEntity<String> changePassword(@RequestBody ChangePasswordDTO changePasswordDTO){
+        return new ResponseEntity<>(authenticationService.changePassword(changePasswordDTO),HttpStatus.OK);
     }
 }
