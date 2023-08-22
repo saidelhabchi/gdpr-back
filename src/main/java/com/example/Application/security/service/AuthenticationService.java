@@ -7,6 +7,7 @@ import com.example.Application.service.mail.MailService;
 import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -45,43 +46,48 @@ public class AuthenticationService {
         newAdmin.setFirstName(registerDTO.getFirstname());
         newAdmin.setLastName(registerDTO.getLastname());
         newAdmin.setEmail(registerDTO.getEmail());
-        newAdmin.setPhone(registerDTO.getPhone());
+//        newAdmin.setPhone(registerDTO.getPhone());
         //added for email verification
         String uuid_verification = UUID.randomUUID().toString();
         newAdmin.setVerificationCode(uuid_verification);
         newAdmin.setEnabled(false);
-        sendVerificationMail(adminMail,newAdmin.getEmail(), LINK,uuid_verification);
+        sendVerificationMail(adminMail,newAdmin.getEmail(), LINK,uuid_verification,newAdmin.getId());
         return adminRepository.save(newAdmin);
     }
 
     public LoginResponseDTO login(LoginRequestDTO loginRequestDTO){
-        Admin admin = adminRepository.findByUsername(loginRequestDTO.getUsername()).get();
-        if(admin.isEnabled()){
-            try {
-                Authentication authentication = authenticationManager.authenticate(
-                        new UsernamePasswordAuthenticationToken(loginRequestDTO.getUsername(),loginRequestDTO.getPassword())
-                );
-                SecurityContextHolder.getContext().setAuthentication(authentication);
-                String token = tokenService.generateToken(authentication);
-                return new LoginResponseDTO(true,token,"none");
-            }catch (Exception e){
-                return new LoginResponseDTO(false,"","credentials aren't correct");
+        Optional<Admin> adminOptional = adminRepository.findByEmail(loginRequestDTO.getEmail());
+        if(adminOptional.isPresent()){
+            Admin admin = adminOptional.get();
+            if(admin.isEnabled()){
+                try {
+                    Authentication authentication = authenticationManager.authenticate(
+                            new UsernamePasswordAuthenticationToken(admin.getUsername(),loginRequestDTO.getPassword())
+                    );
+                    SecurityContextHolder.getContext().setAuthentication(authentication);
+                    String token = tokenService.generateToken(authentication);
+                    return new LoginResponseDTO(true,token,"none");
+                }catch (Exception e){
+                    return new LoginResponseDTO(false,"","credentials are not correct");
+                }
+            }else{
+                sendVerificationMail(adminMail, admin.getEmail(),LINK,admin.getVerificationCode(), admin.getId());
+                return new LoginResponseDTO(false,"","account is disabled");
             }
         }else{
-            sendVerificationMail(adminMail, admin.getEmail(),LINK,admin.getVerificationCode());
-            return new LoginResponseDTO(false,"","account is disabled");
+            return new LoginResponseDTO(false,"","you don't have an account! sign up first.");
         }
     }
-    public String accountVerification(AccountVerificationDTO accountVerificationDTO,String verificationCode){
-        Admin admin = adminRepository.findByVerificationCode(verificationCode).get();
+    public VerifyResponseDTO accountVerification(AccountVerificationDTO accountVerificationDTO){
+        Admin admin = adminRepository.findById(accountVerificationDTO.getId()).get();
          if(accountVerificationDTO.getVerification_code().equals(admin.getVerificationCode())){
              admin.setEnabled(true);
              admin.setVerificationCode(null);
              adminRepository.save(admin);
-            return "success";
+            return new VerifyResponseDTO("success", true);
         }
         else{
-            return "failed";
+            return new VerifyResponseDTO("failed", false);
         }
     }
 
@@ -100,9 +106,9 @@ public class AuthenticationService {
         }
         return "this account doesn't exist";
     }
-    private String sendVerificationMail(String to,String newAdmin, String link,String verification_code){
+    private String sendVerificationMail(String to,String newAdmin, String link,String verification_code,int id){
         try{
-            String content = "to verify "+ newAdmin +" account click in this link : "+link+"/"+verification_code+" \n"+"please enter this "+ verification_code+"\n";
+            String content = "to verify "+ newAdmin +" account click in this link : "+link+"/"+id+" \n"+"please enter this "+ verification_code+"\n";
             mailService.sendEmail(to,"Account verification",content);
             return "mail sent successfully";
         } catch (MessagingException e) {

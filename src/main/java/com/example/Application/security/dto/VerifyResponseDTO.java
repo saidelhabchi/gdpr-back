@@ -2,12 +2,11 @@ package com.example.Application.security.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+import org.springframework.http.HttpStatus;
 
 @Data
 @AllArgsConstructor
-@NoArgsConstructor
-public class LoginRequestDTO {
-    String email;
-    String password;
+public class VerifyResponseDTO {
+    String message;
+    boolean status;
 }

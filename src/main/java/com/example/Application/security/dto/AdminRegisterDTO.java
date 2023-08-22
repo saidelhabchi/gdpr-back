@@ -7,7 +7,6 @@ public class AdminRegisterDTO {
     String firstname;
     String lastname;
     String username;
-    String password;
     String email;
-    String phone;
+    String password;
 }

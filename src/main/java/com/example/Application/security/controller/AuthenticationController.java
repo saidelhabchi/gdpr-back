@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/auth")
+@CrossOrigin(origins = "http://localhost:3000")
 public class AuthenticationController {
     @Autowired
     AuthenticationService authenticationService;
@@ -28,10 +29,9 @@ public class AuthenticationController {
     public String verifyPage(){
         return "need to be implemented";
     }
-    @PostMapping("/verify/{code}")
-    public ResponseEntity<String> verify(@PathVariable("code") String code, @RequestBody AccountVerificationDTO verificationDTO){
-        String response = authenticationService.accountVerification(verificationDTO, code);
-        return new ResponseEntity<>(response,HttpStatus.OK);
+    @PostMapping("/verify")
+    public VerifyResponseDTO verify(@RequestBody AccountVerificationDTO verificationDTO){
+        return authenticationService.accountVerification(verificationDTO);
     }
 
     @PostMapping("/change_password")

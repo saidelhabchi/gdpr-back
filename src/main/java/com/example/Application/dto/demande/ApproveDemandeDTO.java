@@ -8,10 +8,13 @@ public class ApproveDemandeDTO {
     int id;
     String numero_decision_autorisation;
     String date_decision_autorisation;
+    //need to be calculated automatically
     String fin_d_autorisation;
+    //need to be calculated automatically
     String redevence_annuelle;
     String dernier_payment;
     String date_dernier_payment;
+    //need to be calculated automatically
     String reste_a_payer;
     MultipartFile lettre_approvation;
     MultipartFile rapport_technique;

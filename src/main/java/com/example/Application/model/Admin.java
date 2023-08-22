@@ -20,8 +20,11 @@ public class Admin implements UserDetails {
     String password;
     @Column(unique = true)
     String email;
+    /*
     @Column(unique = true)
     String phone;
+     */
+
     Authority authorities = new Authority();
     @Column(name = "verification_code")
     String verificationCode;
@@ -77,11 +80,11 @@ public class Admin implements UserDetails {
     public String getEmail() {
         return email;
     }
-
+/*
     public String getPhone() {
         return phone;
     }
-
+*/
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
@@ -97,11 +100,11 @@ public class Admin implements UserDetails {
     public void setEmail(String email) {
         this.email = email;
     }
-
+/*
     public void setPhone(String phone) {
         this.phone = phone;
     }
-
+*/
     public void setAuthorities(Authority authorities) {
         this.authorities = authorities;
     }
