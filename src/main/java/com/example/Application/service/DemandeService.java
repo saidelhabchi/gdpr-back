@@ -43,12 +43,14 @@ public class DemandeService {
     }
 
 
-    public void addDemande(DemandeFirstDTO demandeFirstDTO) throws IOException {
+    public void addDemande(
+            DemandeFirstDTO demandeFirstDTO
+            ) throws IOException {
 
         //store file path
-        String fichePlansPath = getFilePath(demandeFirstDTO.getFiche_plans(), demandeFirstDTO.getTitre());
-        String ficheCPSPath =  getFilePath(demandeFirstDTO.getFiche_cps(), demandeFirstDTO.getTitre());
-        String ficheDemandePath = getFilePath(demandeFirstDTO.getFiche_demande(), demandeFirstDTO.getTitre());
+        String fichePlansPath = getFilePath(demandeFirstDTO.getFiche_plans(),demandeFirstDTO.getTitre());
+        String ficheCPSPath =  getFilePath(demandeFirstDTO.getFiche_cps(),demandeFirstDTO.getTitre());
+        String ficheDemandePath = getFilePath(demandeFirstDTO.getFiche_demande(),demandeFirstDTO.getTitre());
 
         Optional<Occupant> OccOpt = occupantRepository.findByName(demandeFirstDTO.getNom_occupant());
         Occupant occupant = new Occupant();
@@ -57,6 +59,8 @@ public class DemandeService {
         }else{
             occupant.setName(demandeFirstDTO.getNom_occupant());
             occupant.setIdentity(demandeFirstDTO.getIdentite_occupant());
+            occupant.setPhone(demandeFirstDTO.getPhone_occupant());
+            occupant.setCin(demandeFirstDTO.getCin_occupant());
             occupantRepository.save(occupant);
         }
 

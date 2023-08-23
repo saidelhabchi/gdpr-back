@@ -7,6 +7,7 @@ import com.example.Application.model.Demande;
 import com.example.Application.repository.DemandeRepository;
 import com.example.Application.service.DemandeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +19,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/demandes")
+@CrossOrigin(origins = "http://localhost:3000")
 public class DemandeController {
     @Autowired
     DemandeService demandeService;
@@ -38,9 +40,9 @@ public class DemandeController {
     }
     //insertFirstTime
     @PostMapping("/demande")
-    public List<Demande> insertDemande(DemandeFirstDTO demandeDTO) throws IOException {
+    public ResponseEntity<String> insertDemande(DemandeFirstDTO demandeDTO) throws IOException {
         demandeService.addDemande(demandeDTO);
-        return demandeService.allDemandes();
+        return new ResponseEntity<>(HttpStatus.OK);
     }
     @PostMapping("/approve")
     public Demande approveDemande(ApproveDemandeDTO approveDemandeDTO) throws IOException, ParseException {

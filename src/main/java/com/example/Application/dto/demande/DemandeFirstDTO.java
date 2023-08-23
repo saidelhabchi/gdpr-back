@@ -7,7 +7,6 @@ public class DemandeFirstDTO {
     String titre;
     String nom_occupant;
     String identite_occupant;
-    String type_occupant;
     String phone_occupant;
     String cin_occupant;
     String numero_route;
