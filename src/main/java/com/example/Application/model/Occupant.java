@@ -13,4 +13,6 @@ public class Occupant {
     String name;
     String identity;
     String type;
+    String phone;
+    String cin;
 }

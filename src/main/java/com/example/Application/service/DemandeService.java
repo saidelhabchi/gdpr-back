@@ -2,6 +2,7 @@ package com.example.Application.service;
 
 import com.example.Application.dto.demande.ApproveDemandeDTO;
 import com.example.Application.dto.demande.DemandeDTO;
+import com.example.Application.dto.demande.DemandeFirstDTO;
 import com.example.Application.model.*;
 import com.example.Application.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,42 +43,30 @@ public class DemandeService {
     }
 
 
-    public void addDemande(
-            String titre,
-            String nomOccupant,
-            String identiteOccupant,
-            String numeroRoute,
-            String ptDepart,
-            String ptFin,
-            String lineaireOccupe,
-            String superficieOccupe,
-            MultipartFile fichePlans,
-            MultipartFile ficheCPS,
-            MultipartFile ficheDemande
-            ) throws IOException {
+    public void addDemande(DemandeFirstDTO demandeFirstDTO) throws IOException {
 
         //store file path
-        String fichePlansPath = getFilePath(fichePlans,titre);
-        String ficheCPSPath =  getFilePath(ficheCPS,titre);
-        String ficheDemandePath = getFilePath(ficheDemande,titre);
+        String fichePlansPath = getFilePath(demandeFirstDTO.getFiche_plans(), demandeFirstDTO.getTitre());
+        String ficheCPSPath =  getFilePath(demandeFirstDTO.getFiche_cps(), demandeFirstDTO.getTitre());
+        String ficheDemandePath = getFilePath(demandeFirstDTO.getFiche_demande(), demandeFirstDTO.getTitre());
 
-        Optional<Occupant> OccOpt = occupantRepository.findByName(nomOccupant);
+        Optional<Occupant> OccOpt = occupantRepository.findByName(demandeFirstDTO.getNom_occupant());
         Occupant occupant = new Occupant();
         if(OccOpt.isPresent()) {
             occupant = OccOpt.get();
         }else{
-            occupant.setName(nomOccupant);
-            occupant.setIdentity(identiteOccupant);
+            occupant.setName(demandeFirstDTO.getNom_occupant());
+            occupant.setIdentity(demandeFirstDTO.getIdentite_occupant());
             occupantRepository.save(occupant);
         }
 
 
         DomainePublic domainePublic = new DomainePublic();
-        domainePublic.setAdresse(numeroRoute);
-        domainePublic.setPtDebut(ptDepart);
-        domainePublic.setPtFin(ptFin);
-        domainePublic.setLineaireOccupee(doubleFromString(lineaireOccupe));
-        domainePublic.setSuperficieOccupee(doubleFromString(superficieOccupe));
+        domainePublic.setAdresse(demandeFirstDTO.getNumero_route());
+        domainePublic.setPtDebut(demandeFirstDTO.getPt_depart());
+        domainePublic.setPtFin(demandeFirstDTO.getPt_fin());
+        domainePublic.setLineaireOccupee(doubleFromString(demandeFirstDTO.getLineaire_occupe()));
+        domainePublic.setSuperficieOccupee(doubleFromString(demandeFirstDTO.getSuperficie_occupe()));
 
         //set file path to database
         Fiches fiches = new Fiches();
@@ -86,12 +75,12 @@ public class DemandeService {
         fiches.setFicheDemande(ficheDemandePath);
 
         //save file to repo
-        saveFileToUploadFolder(fichePlans,titre);
-        saveFileToUploadFolder(ficheCPS,titre);
-        saveFileToUploadFolder(ficheDemande,titre);
+        saveFileToUploadFolder(demandeFirstDTO.getFiche_plans(),demandeFirstDTO.getTitre());
+        saveFileToUploadFolder(demandeFirstDTO.getFiche_cps(),demandeFirstDTO.getTitre());
+        saveFileToUploadFolder(demandeFirstDTO.getFiche_demande(),demandeFirstDTO.getTitre());
 
         Demande demande = new Demande();
-        demande.setTitle(titre);
+        demande.setTitle(demandeFirstDTO.getTitre());
         demande.setOccupant(occupant);
         domainPublicRepository.save(domainePublic);
         demande.setDomainePublic(domainePublic);

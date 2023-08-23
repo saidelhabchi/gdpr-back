@@ -39,7 +39,7 @@ public class DemandeController {
     //insertFirstTime
     @PostMapping("/demande")
     public List<Demande> insertDemande(DemandeFirstDTO demandeDTO) throws IOException {
-        demandeService.addDemande(demandeDTO.getTitre(), demandeDTO.getNom_occupant(), demandeDTO.getIdentite_occupant(), demandeDTO.getNumero_route(), demandeDTO.getPt_depart(), demandeDTO.getPt_fin(), demandeDTO.getLineaire_occupe(), demandeDTO.getSuperficie_occupe(), demandeDTO.getFiche_plans(), demandeDTO.getFiche_cps(), demandeDTO.getFiche_demande());
+        demandeService.addDemande(demandeDTO);
         return demandeService.allDemandes();
     }
     @PostMapping("/approve")
