@@ -26,6 +26,11 @@ import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.Arrays;
 
 @Configuration
 @EnableWebSecurity
@@ -52,16 +57,19 @@ public class SecurityConfig {
     @Bean
     SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
-                .cors(cors -> cors.disable())
                 .csrf(csrf -> csrf.disable())
+                .cors(cors -> cors.disable())
                 .authorizeHttpRequests(requestMatchers -> requestMatchers
                         .requestMatchers("/api/auth/**")
                         .permitAll()
                         .requestMatchers("/api/test-api/**").permitAll()
                         .requestMatchers("/api/demandes/**")
                         .authenticated()
+                        .requestMatchers("/api/download/**")
+                        .permitAll()
                         .anyRequest()
-                        .authenticated());
+                        .permitAll());
+        httpSecurity.cors().configurationSource(corsConfigurationSource());
         httpSecurity.oauth2ResourceServer(oauthConfigure -> oauthConfigure.jwt(jwtConfigurer -> jwtConfigurer.jwtAuthenticationConverter(null)));
         httpSecurity.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         return httpSecurity
@@ -86,5 +94,22 @@ public class SecurityConfig {
         JWK jwk = new RSAKey.Builder(keys.getPublicKey()).privateKey(keys.getPrivateKey()).build();
         JWKSource<SecurityContext> jwks = new ImmutableJWKSet<>(new JWKSet(jwk));
         return new NimbusJwtEncoder(jwks);
+    }
+
+
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration corsConfiguration = new CorsConfiguration();
+        corsConfiguration.setAllowCredentials(true);
+        corsConfiguration.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
+        //corsConfiguration.setAllowedOrigins(Arrays.asList("http://192.168.1.4:3000"));
+        corsConfiguration.setAllowedMethods(Arrays.asList("GET", "PATCH" , "POST", "PUT", "DELETE"));
+        corsConfiguration.setAllowedHeaders(Arrays.asList("*"));
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", corsConfiguration);
+
+        return source;
     }
 }

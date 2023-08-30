@@ -26,7 +26,7 @@ public class DemandeService {
     FichesRepository fichesRepository;
 
     @Value("${gdpr.env.uploadFolder}")
-    String UPLOAD_FOLDER;
+    public String UPLOAD_FOLDER;
 
     @Autowired
     public DemandeService(DemandeRepository demandeRepository, OccupantRepository occupantRepository, DomainPublicRepository domainPublicRepository, DecisionAutorisationRepository decisionAutorisationRepository, RedevanceRepository redevanceRepository,FichesRepository fichesRepository) {
@@ -137,18 +137,10 @@ public class DemandeService {
 
     public void deleteDemande(int id) {
         Demande toBeDeleted = demandeRepository.findById(id).get();
-        Redevance redevance = toBeDeleted.getRedevance();
-        DecisionAutorisation decisionAutorisation = toBeDeleted.getDecisionAutorisation();
         Fiches fiches = toBeDeleted.getFiches();
-
         deleteDemandeFiches(toBeDeleted.getTitle());
-
         demandeRepository.deleteById(id);
-
         fichesRepository.delete(fiches);
-        redevanceRepository.delete(redevance);
-        decisionAutorisationRepository.delete(decisionAutorisation);
-
 
     }
     public List<Demande> getApprovedDemands() {
@@ -217,6 +209,10 @@ public class DemandeService {
 
         demandeRepository.save(demande);
         return null;
+    }
+
+    public Demande getDemandeById(int id){
+        return demandeRepository.findById(id).get();
     }
 
     private Date dateFromString(String date) throws ParseException {

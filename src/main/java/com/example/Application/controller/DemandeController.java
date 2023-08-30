@@ -7,6 +7,9 @@ import com.example.Application.model.Demande;
 import com.example.Application.repository.DemandeRepository;
 import com.example.Application.service.DemandeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +17,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.ParseException;
 import java.util.List;
 
@@ -25,6 +31,17 @@ public class DemandeController {
     DemandeService demandeService;
     @Autowired
     private DemandeRepository demandeRepository;
+
+    @GetMapping("/download/{folder}/{filename:.+}")
+    public ResponseEntity<Resource> downloadFile(@PathVariable("folder") String folder, @PathVariable("filename") String filename) throws MalformedURLException {
+        Path fileStorageLocation = Paths.get(demandeService.UPLOAD_FOLDER);
+        Path filePath = fileStorageLocation.resolve(folder).resolve(filename);
+        Resource resource = new UrlResource(filePath.toUri());
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
+                .body(resource);
+    }
 
     @GetMapping
     public List<Demande> allDemandes(){
@@ -54,10 +71,15 @@ public class DemandeController {
         return demandeService.updateDemande(demandeDTO);
     }
 
-    @DeleteMapping("/demande/{id}")
-    public List<Demande> deleteDemande(@PathVariable int id){
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<String> deleteDemande(@PathVariable int id){
         demandeService.deleteDemande(id);
-        return demandeService.allDemandes();
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/demande/{id}")
+    public Demande getDemandeById(@PathVariable int id){
+        return demandeService.getDemandeById(id);
     }
     @PostMapping("/test")
     public ResponseEntity<List<String>> test(@RequestParam MultipartFile fiche) throws IOException {
