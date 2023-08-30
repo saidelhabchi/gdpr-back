@@ -14,4 +14,5 @@ public class DecisionAutorisation {
     String numero;
     Date dateDecision;
     Date finAutorisation;
+    int delai;
 }
