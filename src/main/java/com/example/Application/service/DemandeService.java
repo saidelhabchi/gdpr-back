@@ -59,6 +59,7 @@ public class DemandeService {
         }else{
             occupant.setName(demandeFirstDTO.getNom_occupant());
             occupant.setIdentity(demandeFirstDTO.getIdentite_occupant());
+            occupant.setType(demandeFirstDTO.getType_occupant());
             occupant.setPhone(demandeFirstDTO.getPhone_occupant());
             occupant.setCin(demandeFirstDTO.getCin_occupant());
             occupantRepository.save(occupant);
@@ -106,6 +107,7 @@ public class DemandeService {
         decisionAutorisation.setNumero(approveDemandeDTO.getNumero_decision_autorisation());
         decisionAutorisation.setDateDecision(dateFromString(approveDemandeDTO.getDate_decision_autorisation()));
         decisionAutorisation.setFinAutorisation(dateFromString(approveDemandeDTO.getFin_d_autorisation()));
+        decisionAutorisation.setDelai(approveDemandeDTO.getDelai());
         decisionAutorisationRepository.save(decisionAutorisation);
 
         Redevance redevance = new Redevance();
