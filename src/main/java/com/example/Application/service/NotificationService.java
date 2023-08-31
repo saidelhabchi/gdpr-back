@@ -35,4 +35,8 @@ public class NotificationService {
             return "this notification isn't present";
         }
     }
+
+    public Long UnreadNotifications() {
+        return notificationRepository.countByIsRead(false);
+    }
 }

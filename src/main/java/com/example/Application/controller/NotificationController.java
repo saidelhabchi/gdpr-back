@@ -30,4 +30,8 @@ public class NotificationController {
         notificationService.markOneAsRead(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+    @GetMapping("/allUnread")
+    public ResponseEntity<Long> isAllUnread(){
+        return new ResponseEntity<>(notificationService.UnreadNotifications(),HttpStatus.OK);
+    }
 }
