@@ -65,11 +65,14 @@ public class SecurityConfig {
                         .requestMatchers("/api/test-api/**").permitAll()
                         .requestMatchers("/api/demandes/**")
                         .authenticated()
+                        .requestMatchers("/api/notification/**")
+                        .authenticated()
                         .requestMatchers("/api/download/**")
                         .permitAll()
                         .anyRequest()
                         .permitAll());
-        httpSecurity.cors().configurationSource(corsConfigurationSource());
+        httpSecurity.cors(cors -> cors.configurationSource(corsConfigurationSource()));
+        //httpSecurity.cors().configurationSource(corsConfigurationSource());
         httpSecurity.oauth2ResourceServer(oauthConfigure -> oauthConfigure.jwt(jwtConfigurer -> jwtConfigurer.jwtAuthenticationConverter(null)));
         httpSecurity.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         return httpSecurity
