@@ -1,0 +1,6 @@
+CREATE TRIGGER `AfterReduceDelaiEvent` AFTER UPDATE ON `decision_autorisation`
+ FOR EACH ROW BEGIN
+    IF NEW.delai = 1 THEN
+        INSERT INTO notification (is_read,demande_id) VALUES (0,(SELECT demande.id FROM demande JOIN decision_autorisation ON demande.id = decision_autorisation.id WHERE decision_autorisation.id = NEW.id));
+    END IF;
+END
