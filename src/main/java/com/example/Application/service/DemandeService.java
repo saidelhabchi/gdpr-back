@@ -5,6 +5,7 @@ import com.example.Application.dto.demande.DemandeDTO;
 import com.example.Application.dto.demande.DemandeFirstDTO;
 import com.example.Application.model.*;
 import com.example.Application.repository.*;
+import com.example.Application.security.dto.EnregistrerAutorisationDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -25,8 +26,10 @@ public class DemandeService {
     RedevanceRepository redevanceRepository;
     FichesRepository fichesRepository;
 
-    @Value("${gdpr.env.uploadFolder}")
-    public String UPLOAD_FOLDER;
+    @Value("${gdpr.env.uploadFolderFiches}")
+    public String UPLOAD_FOLDER_FICHES;
+    @Value("${gdpr.env.uploadFolderAutorisations}")
+    public String UPLOAD_FOLDER_AUTORISATIONS;
 
     @Autowired
     public DemandeService(DemandeRepository demandeRepository, OccupantRepository occupantRepository, DomainPublicRepository domainPublicRepository, DecisionAutorisationRepository decisionAutorisationRepository, RedevanceRepository redevanceRepository,FichesRepository fichesRepository) {
@@ -80,9 +83,9 @@ public class DemandeService {
         fiches.setFicheDemande(ficheDemandePath);
 
         //save file to repo
-        saveFileToUploadFolder(demandeFirstDTO.getFiche_plans(),demandeFirstDTO.getTitre());
-        saveFileToUploadFolder(demandeFirstDTO.getFiche_cps(),demandeFirstDTO.getTitre());
-        saveFileToUploadFolder(demandeFirstDTO.getFiche_demande(),demandeFirstDTO.getTitre());
+        saveFileToUploadFolder(demandeFirstDTO.getFiche_plans(),UPLOAD_FOLDER_FICHES,demandeFirstDTO.getTitre());
+        saveFileToUploadFolder(demandeFirstDTO.getFiche_cps(),UPLOAD_FOLDER_FICHES,demandeFirstDTO.getTitre());
+        saveFileToUploadFolder(demandeFirstDTO.getFiche_demande(),UPLOAD_FOLDER_FICHES,demandeFirstDTO.getTitre());
 
         Demande demande = new Demande();
         demande.setTitle(demandeFirstDTO.getTitre());
@@ -123,10 +126,10 @@ public class DemandeService {
         fiches.setPlansSignes(plansSignesPath);
         fiches.setGuideExplicatifRedevance(guideExplicatifRedevencePath);
 
-        saveFileToUploadFolder(approveDemandeDTO.getLettre_approvation(),demande.getTitle());
-        saveFileToUploadFolder(approveDemandeDTO.getRapport_technique(),demande.getTitle());
-        saveFileToUploadFolder(approveDemandeDTO.getPlans_signes(),demande.getTitle());
-        saveFileToUploadFolder(approveDemandeDTO.getGuide_explicatif_redevance(),demande.getTitle());
+        saveFileToUploadFolder(approveDemandeDTO.getLettre_approvation(),UPLOAD_FOLDER_FICHES,demande.getTitle());
+        saveFileToUploadFolder(approveDemandeDTO.getRapport_technique(),UPLOAD_FOLDER_FICHES,demande.getTitle());
+        saveFileToUploadFolder(approveDemandeDTO.getPlans_signes(),UPLOAD_FOLDER_FICHES,demande.getTitle());
+        saveFileToUploadFolder(approveDemandeDTO.getGuide_explicatif_redevance(),UPLOAD_FOLDER_FICHES,demande.getTitle());
 
         demande.setDecisionAutorisation(decisionAutorisation);
         demande.setRedevance(redevance);
@@ -200,13 +203,13 @@ public class DemandeService {
         fiches.setPlansSignes(plansSignesPath);
         fiches.setGuideExplicatifRedevance(guideExplicatifRedevencePath);
 
-        saveFileToUploadFolder(demandeDTO.getFiche_plans(),demandeDTO.getTitre());
-        saveFileToUploadFolder(demandeDTO.getFiche_cps(),demandeDTO.getTitre());
-        saveFileToUploadFolder(demandeDTO.getFiche_demande(),demandeDTO.getTitre());
-        saveFileToUploadFolder(demandeDTO.getLettre_approvation(),demandeDTO.getTitre());
-        saveFileToUploadFolder(demandeDTO.getRapport_technique(),demandeDTO.getTitre());
-        saveFileToUploadFolder(demandeDTO.getPlans_signes(),demandeDTO.getTitre());
-        saveFileToUploadFolder(demandeDTO.getGuide_explicatif_redevance(),demandeDTO.getTitre());
+        saveFileToUploadFolder(demandeDTO.getFiche_plans(),UPLOAD_FOLDER_FICHES,demandeDTO.getTitre());
+        saveFileToUploadFolder(demandeDTO.getFiche_cps(),UPLOAD_FOLDER_FICHES,demandeDTO.getTitre());
+        saveFileToUploadFolder(demandeDTO.getFiche_demande(),UPLOAD_FOLDER_FICHES,demandeDTO.getTitre());
+        saveFileToUploadFolder(demandeDTO.getLettre_approvation(),UPLOAD_FOLDER_FICHES,demandeDTO.getTitre());
+        saveFileToUploadFolder(demandeDTO.getRapport_technique(),UPLOAD_FOLDER_FICHES,demandeDTO.getTitre());
+        saveFileToUploadFolder(demandeDTO.getPlans_signes(),UPLOAD_FOLDER_FICHES,demandeDTO.getTitre());
+        saveFileToUploadFolder(demandeDTO.getGuide_explicatif_redevance(),UPLOAD_FOLDER_FICHES,demandeDTO.getTitre());
 
 
         demandeRepository.save(demande);
@@ -217,6 +220,15 @@ public class DemandeService {
         return demandeRepository.findById(id).get();
     }
 
+    public String enregistrerAutorisation(EnregistrerAutorisationDTO enregistrerAutorisationDTO) throws IOException {
+        try {
+            saveFileToUploadFolder(enregistrerAutorisationDTO.getAutorisation(),UPLOAD_FOLDER_AUTORISATIONS,enregistrerAutorisationDTO.getFoldername());
+            return "success";
+        }catch (Exception e){
+            return e.getMessage();
+        }
+    }
+
     private Date dateFromString(String date) throws ParseException {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         return dateFormat.parse(date);
@@ -225,11 +237,11 @@ public class DemandeService {
         return Double.parseDouble(d);
     }
     private String getFilePath(MultipartFile file,String titre){
-        return UPLOAD_FOLDER + "\\"+titre+"\\"+file.getOriginalFilename();
+        return UPLOAD_FOLDER_FICHES + "\\"+titre+"\\"+file.getOriginalFilename();
     }
-    private void saveFileToUploadFolder(MultipartFile file,String foldername) throws IOException {
+    private void saveFileToUploadFolder(MultipartFile file,String uploadFolder,String foldername) throws IOException {
         if(file != null){
-            File folder = new File(UPLOAD_FOLDER+"\\"+foldername);
+            File folder = new File(uploadFolder +"\\"+foldername);
             if(!folder.exists()){
                 folder.mkdir();
             }
@@ -238,7 +250,7 @@ public class DemandeService {
     }
 
     private boolean deleteDemandeFiches(String FolderTitle){
-        File folder = new File(UPLOAD_FOLDER+"\\"+FolderTitle);
+        File folder = new File(UPLOAD_FOLDER_FICHES +"\\"+FolderTitle);
         if(folder.exists() && folder.isDirectory()){
             File[] files = folder.listFiles();
             for (File file : files ) {
@@ -251,16 +263,16 @@ public class DemandeService {
 
 
     public List<String> test(MultipartFile file) throws IOException {
-        File folder = new File(UPLOAD_FOLDER+"\\test");
+        File folder = new File(UPLOAD_FOLDER_FICHES +"\\test");
         folder.mkdir();
-        saveFileToUploadFolder(file,folder.getAbsolutePath()+"\\"+file.getOriginalFilename());
+        saveFileToUploadFolder(file,UPLOAD_FOLDER_FICHES,folder.getAbsolutePath()+"\\"+file.getOriginalFilename());
 //        var test = List.of("x",UPLOAD_FOLDER+file.getOriginalFilename());
         var test = List.of("x", folder.getAbsolutePath()+"\\"+file.getOriginalFilename());
         return test;
     }
 
     public boolean testDelete() {
-        return deleteDemandeFiches(UPLOAD_FOLDER+"\\test");
+        return deleteDemandeFiches(UPLOAD_FOLDER_FICHES +"\\test");
     }
 
 }

@@ -34,7 +34,7 @@ public class DemandeController {
 
     @GetMapping("/download/{folder}/{filename:.+}")
     public ResponseEntity<Resource> downloadFile(@PathVariable("folder") String folder, @PathVariable("filename") String filename) throws MalformedURLException {
-        Path fileStorageLocation = Paths.get(demandeService.UPLOAD_FOLDER);
+        Path fileStorageLocation = Paths.get(demandeService.UPLOAD_FOLDER_FICHES);
         Path filePath = fileStorageLocation.resolve(folder).resolve(filename);
         Resource resource = new UrlResource(filePath.toUri());
 

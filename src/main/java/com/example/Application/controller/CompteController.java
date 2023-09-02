@@ -1,5 +1,6 @@
 package com.example.Application.controller;
 
+import com.example.Application.dto.compte.CompteResponseDTO;
 import com.example.Application.dto.compte.InfosDTO;
 import com.example.Application.dto.compte.PasswordDTO;
 import com.example.Application.service.compte.CompteService;
@@ -17,15 +18,16 @@ public class CompteController {
     @Autowired
     CompteService compteService;
     @GetMapping("/infos")
-    public ResponseEntity<String> getPrincipalInfos(Principal principal){
-        return new ResponseEntity<>(HttpStatus.OK);
+    public InfosDTO getPrincipalInfos(Principal principal){
+        InfosDTO infosDTO = compteService.getPrincipalInfos(principal.getName());
+        return infosDTO;
     }
     @PostMapping("/change-infos")
-    public ResponseEntity<String> changeInfos(Principal principal, @RequestBody InfosDTO infosDTO){
+    public ResponseEntity<CompteResponseDTO> changeInfos(Principal principal, @RequestBody InfosDTO infosDTO){
         return new ResponseEntity<>(compteService.changeInfos(principal.getName(),infosDTO),HttpStatusCode.valueOf(200));
     }
     @PostMapping("/change-password")
-    public ResponseEntity<String> changePassword(Principal principal,@RequestBody PasswordDTO passwordDTO){
+    public ResponseEntity<CompteResponseDTO> changePassword(Principal principal,@RequestBody PasswordDTO passwordDTO){
         return new ResponseEntity<>(compteService.changePassword(principal.getName(),passwordDTO),HttpStatusCode.valueOf(200));
     }
 }

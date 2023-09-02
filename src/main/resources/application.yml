@@ -23,17 +23,14 @@ spring:
     url: jdbc:mysql://localhost:3306/gdpr_dev
     username: root
     password:
-        username: root
-        password:
   jpa:
-    databasePlatform: org.hibernate.dialect.MySQL8Dialect
     generateDdl: true
-    showSql: true
     hibernate:
       ddlAuto: update
 
 gdpr:
   env:
-    uploadFolder: D:\said\Stage\Next_try\gdpr\public\upload-folder\fiches\
+    uploadFolderFiches: D:\said\Stage\Next_try\gdpr\public\upload-folder\fiches\
+    uploadFolderAutorisations: D:\said\Stage\Next_try\gdpr\public\upload-folder\autorisations\
     admin:
       mail: saidelhabchi31@gmail.com
