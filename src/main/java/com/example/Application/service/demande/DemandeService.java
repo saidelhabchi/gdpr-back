@@ -1,4 +1,4 @@
-package com.example.Application.service;
+package com.example.Application.service.demande;
 
 import com.example.Application.dto.demande.ApproveDemandeDTO;
 import com.example.Application.dto.demande.DemandeDTO;

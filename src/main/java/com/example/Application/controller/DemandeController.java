@@ -5,7 +5,7 @@ import com.example.Application.dto.demande.DemandeDTO;
 import com.example.Application.dto.demande.DemandeFirstDTO;
 import com.example.Application.model.Demande;
 import com.example.Application.repository.DemandeRepository;
-import com.example.Application.service.DemandeService;
+import com.example.Application.service.demande.DemandeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
