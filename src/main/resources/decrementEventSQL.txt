@@ -1,0 +1,4 @@
+CREATE DEFINER=`root`@`localhost` EVENT `ReduceDelaiEvent` ON SCHEDULE EVERY 1 YEAR STARTS '2023-09-01 00:00:00' ON COMPLETION NOT PRESERVE ENABLE DO BEGIN
+    UPDATE decision_autorisation
+    SET decision_autorisation.delai = decision_autorisation.delai - 1; 
+END
