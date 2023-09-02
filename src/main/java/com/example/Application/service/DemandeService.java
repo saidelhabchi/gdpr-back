@@ -25,8 +25,8 @@ public class DemandeService {
     RedevanceRepository redevanceRepository;
     FichesRepository fichesRepository;
 
-    @Value("${gdpr.env.uploadFolder}")
-    public String UPLOAD_FOLDER;
+    @Value("${gdpr.env.uploadFolderFiches}")
+    public String UPLOAD_FOLDER_FICHES;
 
     @Autowired
     public DemandeService(DemandeRepository demandeRepository, OccupantRepository occupantRepository, DomainPublicRepository domainPublicRepository, DecisionAutorisationRepository decisionAutorisationRepository, RedevanceRepository redevanceRepository,FichesRepository fichesRepository) {
@@ -232,11 +232,11 @@ public class DemandeService {
         return Double.parseDouble(d);
     }
     private String getFilePath(MultipartFile file,String titre){
-        return UPLOAD_FOLDER + "\\"+titre+"\\"+file.getOriginalFilename();
+        return UPLOAD_FOLDER_FICHES + "\\"+titre+"\\"+file.getOriginalFilename();
     }
     private void saveFileToUploadFolder(MultipartFile file,String foldername) throws IOException {
         if(file != null){
-            File folder = new File(UPLOAD_FOLDER+"\\"+foldername);
+            File folder = new File(UPLOAD_FOLDER_FICHES +"\\"+foldername);
             if(!folder.exists()){
                 folder.mkdir();
             }
@@ -245,7 +245,7 @@ public class DemandeService {
     }
 
     private boolean deleteDemandeFiches(String FolderTitle){
-        File folder = new File(UPLOAD_FOLDER+"\\"+FolderTitle);
+        File folder = new File(UPLOAD_FOLDER_FICHES +"\\"+FolderTitle);
         if(folder.exists() && folder.isDirectory()){
             File[] files = folder.listFiles();
             for (File file : files ) {
@@ -258,7 +258,7 @@ public class DemandeService {
 
 
     public List<String> test(MultipartFile file) throws IOException {
-        File folder = new File(UPLOAD_FOLDER+"\\test");
+        File folder = new File(UPLOAD_FOLDER_FICHES +"\\test");
         folder.mkdir();
         saveFileToUploadFolder(file,folder.getAbsolutePath()+"\\"+file.getOriginalFilename());
 //        var test = List.of("x",UPLOAD_FOLDER+file.getOriginalFilename());
@@ -267,7 +267,7 @@ public class DemandeService {
     }
 
     public boolean testDelete() {
-        return deleteDemandeFiches(UPLOAD_FOLDER+"\\test");
+        return deleteDemandeFiches(UPLOAD_FOLDER_FICHES +"\\test");
     }
 
 }

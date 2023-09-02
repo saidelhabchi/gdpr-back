@@ -3,6 +3,7 @@ package com.example.Application.controller;
 import com.example.Application.model.DecisionAutorisation;
 import com.example.Application.repository.DecisionAutorisationRepository;
 import com.example.Application.security.dto.EnregistrerAutorisationDTO;
+import com.example.Application.service.AutorisationService;
 import com.example.Application.service.DemandeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,8 +22,7 @@ public class DecisionAutorisationController {
     @Autowired
     DecisionAutorisationRepository decisionAutorisationRepository;
     @Autowired
-    DemandeService demandeService;
-
+    AutorisationService autorisationService;
     @Autowired
     public DecisionAutorisationController(DecisionAutorisationRepository decisionAutorisationRepository) {
         this.decisionAutorisationRepository = decisionAutorisationRepository;
@@ -33,6 +33,6 @@ public class DecisionAutorisationController {
     }
     @PostMapping("/enregistrer")
     public ResponseEntity<String> enregistrerAutorisation(EnregistrerAutorisationDTO enregistrerAutorisationDTO) throws IOException {
-        return new ResponseEntity<>(demandeService.enregistrerAutorisation(enregistrerAutorisationDTO),HttpStatus.OK);
+        return new ResponseEntity<>(autorisationService.enregistrerAutorisation(enregistrerAutorisationDTO),HttpStatus.OK);
     }
 }
