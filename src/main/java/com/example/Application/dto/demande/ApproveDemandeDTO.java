@@ -12,6 +12,7 @@ public class ApproveDemandeDTO {
     String fin_d_autorisation;
     //need to be calculated automatically
     int delai;
+    String dh_par_unite;
     String redevence_annuelle;
     String dernier_payment;
     String date_dernier_payment;

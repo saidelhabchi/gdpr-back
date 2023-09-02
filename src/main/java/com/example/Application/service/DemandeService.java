@@ -98,7 +98,7 @@ public class DemandeService {
 
         Demande demande = demandeRepository.findById(approveDemandeDTO.getId()).get();
 
-        String ficheDApprovationPath = getFilePath(approveDemandeDTO.getLettre_approvation(),demande.getTitle());
+
         String rapportTechniquePath = getFilePath(approveDemandeDTO.getRapport_technique(),demande.getTitle());
         String plansSignesPath = getFilePath(approveDemandeDTO.getPlans_signes(),demande.getTitle());
         String guideExplicatifRedevencePath = getFilePath(approveDemandeDTO.getGuide_explicatif_redevance(),demande.getTitle());
@@ -115,18 +115,25 @@ public class DemandeService {
         redevance.setDernierPayment(doubleFromString(approveDemandeDTO.getDernier_payment()));
         redevance.setDateDernierPayment(dateFromString(approveDemandeDTO.getDate_dernier_payment()));
         redevance.setResteAPayer(doubleFromString(approveDemandeDTO.getReste_a_payer()));
+        redevance.setDhParUnite(doubleFromString(approveDemandeDTO.getDh_par_unite()));
         redevanceRepository.save(redevance);
 
         Fiches fiches = demande.getFiches();
-        fiches.setFicheDApprovation(ficheDApprovationPath);
+
         fiches.setRapportTechnique(rapportTechniquePath);
         fiches.setPlansSignes(plansSignesPath);
         fiches.setGuideExplicatifRedevance(guideExplicatifRedevencePath);
 
-        saveFileToUploadFolder(approveDemandeDTO.getLettre_approvation(),demande.getTitle());
+
         saveFileToUploadFolder(approveDemandeDTO.getRapport_technique(),demande.getTitle());
         saveFileToUploadFolder(approveDemandeDTO.getPlans_signes(),demande.getTitle());
         saveFileToUploadFolder(approveDemandeDTO.getGuide_explicatif_redevance(),demande.getTitle());
+
+        if(approveDemandeDTO.getLettre_approvation().getSize() != 0){
+            String ficheDApprovationPath = getFilePath(approveDemandeDTO.getLettre_approvation(),demande.getTitle());
+            fiches.setFicheDApprovation(ficheDApprovationPath);
+            saveFileToUploadFolder(approveDemandeDTO.getLettre_approvation(),demande.getTitle());
+        }
 
         demande.setDecisionAutorisation(decisionAutorisation);
         demande.setRedevance(redevance);

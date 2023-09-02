@@ -17,4 +17,5 @@ public class Redevance {
     Double dernierPayment;
     Date dateDernierPayment;
     Double ResteAPayer;
+    Double dhParUnite;
 }
