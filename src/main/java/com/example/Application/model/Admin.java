@@ -28,6 +28,8 @@ public class Admin implements UserDetails {
     Authority authorities = new Authority();
     @Column(name = "verification_code")
     String verificationCode;
+    @Column(name = "reset_password_code")
+    String resetPasswordCode;
     boolean enabled;
 
     public int getId() {

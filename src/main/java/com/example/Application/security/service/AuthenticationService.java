@@ -3,11 +3,14 @@ package com.example.Application.security.service;
 import com.example.Application.model.Admin;
 import com.example.Application.repository.AdminRepository;
 import com.example.Application.security.dto.*;
+import com.example.Application.security.dto.reset_password.FirstStepDTO;
+import com.example.Application.security.dto.reset_password.FirstStepResponseDTO;
+import com.example.Application.security.dto.reset_password.SecondStepDTO;
+import com.example.Application.security.dto.reset_password.SecondStepResponseDTO;
 import com.example.Application.service.mail.MailService;
 import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -15,6 +18,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -113,6 +117,48 @@ public class AuthenticationService {
             return "mail sent successfully";
         } catch (MessagingException e) {
             return "mail failed due to something";
+        }
+    }
+    private FirstStepResponseDTO sendResetPasswordMail(String to,String reset_password_code){
+        try{
+            String content = "to reset "+ to +"'s password please enter this code : "+ reset_password_code+"\n";
+            mailService.sendEmail(to,"Reset password ",content);
+            return new FirstStepResponseDTO("courrier envoyé avec succès",true);
+        } catch (MessagingException e) {
+            return new FirstStepResponseDTO("courrier a échoué",false);
+        }
+    }
+
+    public FirstStepResponseDTO firstStep(FirstStepDTO firstStepDTO) {
+        Optional<Admin> toBeSent = adminRepository.findByEmail(firstStepDTO.getEmail());
+        if(toBeSent.isPresent()){
+            String uuid_verification = UUID.randomUUID().toString();
+            Admin admin = toBeSent.get();
+            admin.setResetPasswordCode(uuid_verification);
+            adminRepository.save(admin);
+            return sendResetPasswordMail(firstStepDTO.getEmail(),uuid_verification);
+        }else{
+            return new  FirstStepResponseDTO("ce compte n’existe pas",false);
+        }
+    }
+    public Integer getIdFromEmail(String email){
+        Admin admin = adminRepository.findByEmail(email).get();
+        return admin.getId();
+    }
+    public SecondStepResponseDTO secondStep(SecondStepDTO secondStepDTO) {
+        Optional<Admin> toBeUpdated = adminRepository.findById(secondStepDTO.getId());
+        if(toBeUpdated.isPresent()){
+            Admin admin = toBeUpdated.get();
+            if(secondStepDTO.getReset_password_code().equals(admin.getResetPasswordCode())){
+                admin.setPassword(passwordEncoder.encode(secondStepDTO.getNew_password()));
+                admin.setVerificationCode(null);
+                adminRepository.save(admin);
+                return new SecondStepResponseDTO("mot de passe mis à jour avec succès",true);
+            }else{
+                return new SecondStepResponseDTO("code de réinitialisation n'est pas correct",false);
+            }
+        }else{
+            return new SecondStepResponseDTO("ce compte n’existe pas",false);
         }
     }
 }
