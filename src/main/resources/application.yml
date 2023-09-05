@@ -1,12 +1,9 @@
-server:
-  port: 8800
-
 spring:
   mail:
     host: smtp.gmail.com
     port: 587
-    username: pfa.production2023@gmail.com
-    password: zaastubhxckgjppr
+    username: ADRESSE_EMAIL
+    password: ACCESS_KEY_EMAIL
     properties:
       mail:
         smtp:
@@ -17,20 +14,22 @@ spring:
     multipart:
       maxFileSize: 5000000
       maxRequestSize: 20000000
-  profiles:
-    active: development
+
   datasource:
-    url: jdbc:mysql://localhost:3306/gdpr_dev
-    username: root
-    password:
+    url: jdbc:mysql://localhost:3306/gdpr_prod
+    username: USERNAME
+    password: PASSWORD
+
   jpa:
+    databasePlatform: org.hibernate.dialect.MySQL8Dialect
     generateDdl: true
+    showSql: true
     hibernate:
       ddlAuto: update
 
 gdpr:
   env:
-    uploadFolderFiches: D:\said\Stage\Next_try\gdpr\public\upload-folder\fiches\
-    uploadFolderAutorisations: D:\said\Stage\Next_try\gdpr\public\upload-folder\autorisations\
+    uploadFolderFiches: PATH_TO_FICHES_FORLDER
+    uploadFolderAutorisations: PATH_TO_AUTORISATIONS_FORLDER
     admin:
-      mail: saidelhabchi31@gmail.com
+      mail: ADRESSE_EMAIL_SAME
