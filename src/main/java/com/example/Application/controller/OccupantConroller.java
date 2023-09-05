@@ -28,9 +28,9 @@ public class OccupantConroller {
         return occupantRepository.findAll();
     }
 
-    @PostMapping("/changer-occupant/{id}")
-    public ResponseEntity<String> changerOccupant(@RequestBody ChangerOccupantDTO changerOccupantDTO,@RequestParam int id){
-        occupantService.changerOccupant(changerOccupantDTO,id);
+    @PostMapping("/changer-occupant")
+    public ResponseEntity<String> changerOccupant(@RequestBody ChangerOccupantDTO changerOccupantDTO){
+        occupantService.changerOccupant(changerOccupantDTO);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

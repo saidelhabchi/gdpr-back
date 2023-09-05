@@ -52,7 +52,7 @@ public class DemandeService {
         String ficheCPSPath =  getFilePath(demandeFirstDTO.getFiche_cps(),demandeFirstDTO.getTitre());
         String ficheDemandePath = getFilePath(demandeFirstDTO.getFiche_demande(),demandeFirstDTO.getTitre());
 
-        Optional<Occupant> OccOpt = occupantRepository.findByName(demandeFirstDTO.getNom_occupant());
+        Optional<Occupant> OccOpt = occupantRepository.findByCin(demandeFirstDTO.getNom_occupant());
         Occupant occupant = new Occupant();
         if(OccOpt.isPresent()) {
             occupant = OccOpt.get();

@@ -14,4 +14,5 @@ public class RenouvlerAutorisationDTO {
     Date date_decision;
     Date fin_autorisation;
     int delai;
+    int id;
 }

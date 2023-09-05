@@ -16,8 +16,8 @@ public class OccupantService {
     OccupantRepository occupantRepository;
     @Autowired
     DemandeRepository demandeRepository;
-    public String changerOccupant(ChangerOccupantDTO changerOccupantDTO, int id) {
-        Optional<Demande> toBeChanged = demandeRepository.findById(id);
+    public String changerOccupant(ChangerOccupantDTO changerOccupantDTO) {
+        Optional<Demande> toBeChanged = demandeRepository.findById(changerOccupantDTO.getId());
         if(toBeChanged.isPresent()){
             Demande demande = toBeChanged.get();
             Occupant occupant = new Occupant();

@@ -13,4 +13,5 @@ public class ChangerOccupantDTO {
     String type;
     String phone;
     String cin;
+    int id;
 }

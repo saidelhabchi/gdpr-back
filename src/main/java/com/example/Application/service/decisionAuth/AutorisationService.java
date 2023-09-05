@@ -36,8 +36,8 @@ public class AutorisationService {
         }
     }
 
-    public String renouvelerAutorisation(RenouvlerAutorisationDTO renouvlerAutorisationDTO,int id){
-        Optional<Demande> toBeChanged = demandeRepository.findById(id);
+    public String renouvelerAutorisation(RenouvlerAutorisationDTO renouvlerAutorisationDTO){
+        Optional<Demande> toBeChanged = demandeRepository.findById(renouvlerAutorisationDTO.getId());
         if(toBeChanged.isPresent()){
             Demande demande = toBeChanged.get();
             DecisionAutorisation decisionAutorisation = new DecisionAutorisation();

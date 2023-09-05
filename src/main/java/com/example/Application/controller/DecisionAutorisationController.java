@@ -35,9 +35,9 @@ public class DecisionAutorisationController {
     public ResponseEntity<String> enregistrerAutorisation(EnregistrerAutorisationDTO enregistrerAutorisationDTO) throws IOException {
         return new ResponseEntity<>(autorisationService.enregistrerAutorisation(enregistrerAutorisationDTO),HttpStatus.OK);
     }
-    @PostMapping("/renouveler-autorisation/{id}")
-    public ResponseEntity<String> renouvelerAutorisation(@RequestBody RenouvlerAutorisationDTO renouvlerAutorisationDTO,@RequestParam int id){
-        autorisationService.renouvelerAutorisation(renouvlerAutorisationDTO,id);
+    @PostMapping("/renouveler-autorisation")
+    public ResponseEntity<String> renouvelerAutorisation(@RequestBody RenouvlerAutorisationDTO renouvlerAutorisationDTO){
+        autorisationService.renouvelerAutorisation(renouvlerAutorisationDTO);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
