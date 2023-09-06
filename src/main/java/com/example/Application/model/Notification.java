@@ -7,7 +7,7 @@ import lombok.Data;
 @Data
 public class Notification {
     @Id
-            @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     int id;
     @OneToOne
     @JoinColumn(name = "demande_id")

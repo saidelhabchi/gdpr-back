@@ -25,7 +25,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/demandes")
-@CrossOrigin(origins = "http://localhost:3000")
 public class DemandeController {
     @Autowired
     DemandeService demandeService;

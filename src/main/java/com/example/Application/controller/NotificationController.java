@@ -10,11 +10,11 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/notification/")
-@CrossOrigin("http://localhost:3000/")
+@RequestMapping("/api/notification")
 public class NotificationController {
     @Autowired
     NotificationService notificationService;
+
     @GetMapping("/read-all")
     public List<Notification> readAll(){
         return notificationService.readAll();

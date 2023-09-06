@@ -24,18 +24,20 @@ public class DemandeService {
     DecisionAutorisationRepository decisionAutorisationRepository;
     RedevanceRepository redevanceRepository;
     FichesRepository fichesRepository;
+    NotificationRepository notificationRepository;
 
     @Value("${gdpr.env.uploadFolderFiches}")
     public String UPLOAD_FOLDER_FICHES;
 
     @Autowired
-    public DemandeService(DemandeRepository demandeRepository, OccupantRepository occupantRepository, DomainPublicRepository domainPublicRepository, DecisionAutorisationRepository decisionAutorisationRepository, RedevanceRepository redevanceRepository,FichesRepository fichesRepository) {
+    public DemandeService(DemandeRepository demandeRepository, OccupantRepository occupantRepository, DomainPublicRepository domainPublicRepository, DecisionAutorisationRepository decisionAutorisationRepository, RedevanceRepository redevanceRepository,FichesRepository fichesRepository,NotificationRepository notificationRepository) {
         this.demandeRepository = demandeRepository;
         this.occupantRepository = occupantRepository;
         this.domainPublicRepository = domainPublicRepository;
         this.decisionAutorisationRepository = decisionAutorisationRepository;
         this.redevanceRepository = redevanceRepository;
         this.fichesRepository = fichesRepository;
+        this.notificationRepository = notificationRepository;
     }
 
     public List<Demande> allDemandes() {
@@ -144,14 +146,14 @@ public class DemandeService {
         return demandeRepository.save(demande);
     }
 
-    public void deleteDemande(int id) {
+    /*public void deleteDemande(int id) {
         Demande toBeDeleted = demandeRepository.findById(id).get();
         Fiches fiches = toBeDeleted.getFiches();
         deleteDemandeFiches(toBeDeleted.getTitle());
         demandeRepository.deleteById(id);
         fichesRepository.delete(fiches);
 
-    }
+    }*/
     public List<Demande> getApprovedDemands() {
         return demandeRepository.findByApproved(true);
     }
@@ -254,6 +256,20 @@ public class DemandeService {
             return folder.delete();
         }
         return false;
+    }
+
+    public void deleteDemande(int id) {
+        Demande toBeDeleted = demandeRepository.findById(id).get();
+        if(toBeDeleted.isApproved()){
+            Notification notification = notificationRepository.findByDemandeId(toBeDeleted.getId());
+            if(notification != null) {
+                notificationRepository.delete(notification);
+            }
+        }
+        Fiches fiches = toBeDeleted.getFiches();
+        deleteDemandeFiches(toBeDeleted.getTitle());
+        demandeRepository.deleteById(id);
+        fichesRepository.delete(fiches);
     }
 
 
