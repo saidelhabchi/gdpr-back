@@ -107,7 +107,7 @@ public class SecurityConfig {
         corsConfiguration.setAllowCredentials(true);
         //corsConfiguration.setAllowedOrigins(Arrays.asList("http://192.168.1.200"));
         //corsConfiguration.setAllowedOrigins(Arrays.asList("http://192.168.1.4:3000"));
-        corsConfiguration.setAllowedOrigins(Arrays.asList("http://192.168.1.200:3000"));
+        corsConfiguration.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
         //corsConfiguration.setAllowedOrigins(Arrays.asList("http://192.168.1.4:3000"));
         corsConfiguration.setAllowedMethods(Arrays.asList("GET", "PATCH" , "POST", "PUT", "DELETE"));
         corsConfiguration.setAllowedHeaders(Arrays.asList("*"));
