@@ -1,0 +1,2 @@
+CREATE DEFINER=`root`@`localhost` EVENT `AddRedevance` ON SCHEDULE EVERY 1 YEAR STARTS '2023-09-07 06:10:07' ON COMPLETION NOT PRESERVE ENABLE DO UPDATE redevance
+    SET redevance.resteapayer = redevance.resteapayer + redevance.montant
