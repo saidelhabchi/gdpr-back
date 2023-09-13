@@ -4,4 +4,5 @@ import com.example.Application.model.DecisionAutorisation;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface DecisionAutorisationRepository extends JpaRepository<DecisionAutorisation,Integer> {
+    DecisionAutorisation findByNumero(String numero);
 }

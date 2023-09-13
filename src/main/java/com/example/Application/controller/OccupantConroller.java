@@ -33,4 +33,14 @@ public class OccupantConroller {
         occupantService.changerOccupant(changerOccupantDTO);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    @GetMapping("/getOccupant")
+    public String getOccupant(String cin){
+        Occupant occupant = occupantRepository.findByCin(cin).orElse(null);
+        if(occupant == null){
+            return "null";
+        }else{
+            return "not null";
+        }
+    }
 }

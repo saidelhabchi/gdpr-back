@@ -4,7 +4,7 @@ import com.example.Application.dto.decisionAuth.RenouvlerAutorisationDTO;
 import com.example.Application.model.DecisionAutorisation;
 import com.example.Application.repository.DecisionAutorisationRepository;
 import com.example.Application.repository.DemandeRepository;
-import com.example.Application.security.dto.EnregistrerAutorisationDTO;
+import com.example.Application.dto.decisionAuth.EnregistrerAutorisationDTO;
 import com.example.Application.service.decisionAuth.AutorisationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

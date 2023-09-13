@@ -25,7 +25,6 @@ public class DemandeService {
     RedevanceRepository redevanceRepository;
     FichesRepository fichesRepository;
     NotificationRepository notificationRepository;
-
     @Value("${gdpr.env.uploadFolderFiches}")
     public String UPLOAD_FOLDER_FICHES;
 
@@ -148,6 +147,10 @@ public class DemandeService {
 
     /*public void deleteDemande(int id) {
         Demande toBeDeleted = demandeRepository.findById(id).get();
+        if(toBeDeleted.isApproved()){
+            Notification notification = notificationRepository.findByDemandeId(toBeDeleted.getId());
+            notificationRepository.delete(notification);
+        }
         Fiches fiches = toBeDeleted.getFiches();
         deleteDemandeFiches(toBeDeleted.getTitle());
         demandeRepository.deleteById(id);

@@ -1,8 +1,10 @@
 package com.example.Application.service.occupant;
 
 import com.example.Application.dto.occupant.ChangerOccupantDTO;
+import com.example.Application.model.DecisionAutorisation;
 import com.example.Application.model.Demande;
 import com.example.Application.model.Occupant;
+import com.example.Application.repository.DecisionAutorisationRepository;
 import com.example.Application.repository.DemandeRepository;
 import com.example.Application.repository.OccupantRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,22 +18,37 @@ public class OccupantService {
     OccupantRepository occupantRepository;
     @Autowired
     DemandeRepository demandeRepository;
+    @Autowired
+    private DecisionAutorisationRepository decisionAutorisationRepository;
+
     public String changerOccupant(ChangerOccupantDTO changerOccupantDTO) {
-        Optional<Demande> toBeChanged = demandeRepository.findById(changerOccupantDTO.getId());
-        if(toBeChanged.isPresent()){
-            Demande demande = toBeChanged.get();
-            Occupant occupant = new Occupant();
-            occupant.setName(changerOccupantDTO.getName());
-            occupant.setIdentity(changerOccupantDTO.getIdentity());
-            occupant.setType(changerOccupantDTO.getType());
-            occupant.setPhone(changerOccupantDTO.getPhone());
-            occupant.setCin(changerOccupantDTO.getCin());
-            occupantRepository.save(occupant);
-            demande.setOccupant(occupant);
-            demandeRepository.save(demande);
-            return "changed with success";
+        Demande demande = demandeRepository.findById(changerOccupantDTO.getId()).orElse(null);
+        if(demande != null){
+            Occupant occupant = occupantRepository.findByCin(changerOccupantDTO.getCin()).orElse(null);
+            //added for now
+            DecisionAutorisation decisionAutorisation = demande.getDecisionAutorisation();
+            decisionAutorisation.setNumero(changerOccupantDTO.getNumero_autorisation());
+            decisionAutorisation.setDateDecision(changerOccupantDTO.getDate_autorisation());
+            decisionAutorisationRepository.save(decisionAutorisation);
+            //end
+            if(occupant == null){
+                Occupant newOccupant = new Occupant();
+                newOccupant.setName(changerOccupantDTO.getName());
+                newOccupant.setType(changerOccupantDTO.getIdentity());
+                newOccupant.setIdentity(changerOccupantDTO.getIdentity());
+                newOccupant.setPhone(changerOccupantDTO.getPhone());
+                newOccupant.setCin(changerOccupantDTO.getCin());
+                occupantRepository.save(newOccupant);
+                demande.setOccupant(newOccupant);
+                demandeRepository.save(demande);
+            }else {
+                demande.setOccupant(occupant);
+                demandeRepository.save(demande);
+            }
         }else{
-            return "demande n'existe pas";
+            return "demande doesn't exist";
         }
+
+        return null;
     }
 }
