@@ -271,8 +271,14 @@ public class DemandeService {
         }
         Fiches fiches = toBeDeleted.getFiches();
         deleteDemandeFiches(toBeDeleted.getTitle());
-        demandeRepository.deleteById(id);
+        DecisionAutorisation decisionAutorisation = toBeDeleted.getDecisionAutorisation();
+        DomainePublic domainePublic = toBeDeleted.getDomainePublic();
+        Redevance redevance = toBeDeleted.getRedevance();
         fichesRepository.delete(fiches);
+        decisionAutorisationRepository.delete(decisionAutorisation);
+        domainPublicRepository.delete(domainePublic);
+        redevanceRepository.delete(redevance);
+        demandeRepository.deleteById(id);
     }
 
 
