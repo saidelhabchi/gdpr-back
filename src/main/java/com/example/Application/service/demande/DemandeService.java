@@ -268,17 +268,9 @@ public class DemandeService {
             if(notification != null) {
                 notificationRepository.delete(notification);
             }
+
         }
-        Fiches fiches = toBeDeleted.getFiches();
-        deleteDemandeFiches(toBeDeleted.getTitle());
-        DecisionAutorisation decisionAutorisation = toBeDeleted.getDecisionAutorisation();
-        DomainePublic domainePublic = toBeDeleted.getDomainePublic();
-        Redevance redevance = toBeDeleted.getRedevance();
-        fichesRepository.delete(fiches);
-        decisionAutorisationRepository.delete(decisionAutorisation);
-        domainPublicRepository.delete(domainePublic);
-        redevanceRepository.delete(redevance);
-        demandeRepository.deleteById(id);
+        demandeRepository.delete(toBeDeleted);
     }
 
 

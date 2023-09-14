@@ -15,18 +15,18 @@ public class Demande {
     @JoinColumn(name = "occupant_id")
     Occupant occupant;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "domaine_public_id")
     DomainePublic domainePublic;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "decision_autorisation_id")
     DecisionAutorisation decisionAutorisation;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "redevance_id")
     Redevance redevance;
-    @OneToOne
+    @OneToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "fiches_id")
     Fiches fiches;
     boolean approved;
